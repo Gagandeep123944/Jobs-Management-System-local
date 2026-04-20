@@ -41,7 +41,7 @@
                                 <div class="d-flex pas-check">
                                     <input type="checkbox" name="remember" id="remember" style="width: fit-content;" class="me-1" value="true"/>
                                     <label for="remember">Remember me</label>
-                                    <a href="{{route('forgetpassword')}}" class="text-end text-decoration-none fs-6 Forget">Forget Password?</a>
+                                    <a href="{{route('forgotPassword')}}" class="text-end text-decoration-none fs-6 Forget">Forget Password?</a>
                                 </div>
                             </div> 
                             <button class="formbtn border-0 rounded-pill p-3 fw-medium fs-3 mt-5 mb-3" type="submit" style="color: #292929;">Login</button>
