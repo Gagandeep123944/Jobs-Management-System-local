@@ -113,9 +113,39 @@ class AuthController extends Controller
 
 
     public function showResetForm(Request $request, $token){
-        return view('layout.passwordreset')->with(
+        return view('login.passwordreset')->with(
                 ['token' => $token, 'email' => $request->email]
             );
+    }
+
+    public function resetPassword(Request $request){
+         $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => [
+                'required',
+                'min:6',
+                'regex:/^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-zA-Z]).+$/',
+            ],
+            'c_password' => 'required|same:password',
+        ], [ 
+            'password.regex' => 'The password must be alphanumeric with at least one uppercase letter and one number.',
+            'c_password.required' => 'Confirm Password is required.',
+            'c_password.same' => 'The password confirmation does not match the password.'
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $user_exists = User::where('email', $request->email)->first();
+
+        if($user_exists){
+            echo "yes its exists";
+        }
+        die();
+
+
+        
     }
 
     public function dashboard(){
