@@ -22,6 +22,7 @@
 								<label for="email" class="fs-5 mt-5 fw-semibold">Email Address</label>
 								<input name="email" id="email" placeholder="Enter your Email" class="ps-3 mb-2 mt-3 border-secondary-subtle rounded-pill border border-1 border-opacity-50 mt-2" style="padding: 15px;">
 							</div>
+							<div id="responseMessage" class="text-center mb-3"></div>
 							<button class="formbtn border-0 rounded-pill p-3 fw-medium fs-3 mt-5 mb-3 text-dark" type="submit">Reset</button>
 							<a href="{{route('login')}}" class="align-center d-flex justify-content-center text-decoration-none mt-3">
 								<div style="width: 15px;" class="me-1 d-flex align-items-center">
@@ -54,6 +55,16 @@
 					processData: false,
 					contentType: false,
 					success: function(response) {
+					//    let obj = JSON.parse(response);
+					//    console.log(obj)
+
+					console.log(response);
+
+					   
+                            
+								$('#' + key).after('<div class="text-danger">' + response.message +  '</div>');
+							
+					   
 						console.log(response);
 					},
 					error: function(xhr, status, error) {

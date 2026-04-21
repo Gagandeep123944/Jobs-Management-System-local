@@ -33,9 +33,10 @@
                                 <label for="password" class="fs-5 fw-semibold">Password</label>
                                 <input type="password" name="password" id="password" id="password" placeholder="Enter your password" class="ps-3 mb-2 mt-3 border-secondary-subtle rounded-pill border border-1 border-opacity-50 mt-2" style="padding: 15px;">
                             </div>
+							<input type="hidden" name="token" value="{{ request('token') }}">
                             <div>
-                                <label for="c_password" class="fs-5 fw-medium">Confirm Password</label>
-                                <input type="password" name="c_password" id="c_password" placeholder="Enter your Confirm Password" class="ps-3 mb-2 mt-3 border-secondary-subtle rounded-pill border border-1 border-opacity-50" style="padding: 15px;">
+                                <label for="password_confirmation" class="fs-5 fw-medium">Confirm Password</label>
+                                <input type="password" name="password_confirmation" id="password_confirmation" placeholder="Enter your Confirm Password" class="ps-3 mb-2 mt-3 border-secondary-subtle rounded-pill border border-1 border-opacity-50" style="padding: 15px;">
                             </div>
                              
                             <button class="formbtn border-0 rounded-pill p-3 fw-medium fs-3 mt-5 mb-3" type="submit" style="color: #292929;">Update</button>

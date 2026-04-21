@@ -20,6 +20,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('/reset-password/{token}', 'showResetForm')->name('password.reset');
     Route::post('/forget/password','sendMail')->name('sendmail');
     Route::post('/forget/reset','resetPassword')->name('resetPassword');
+    Route::get('/logout','logout')->name('logout'); 
 });
 
 Route::middleware(Authenticate::class)->group(function(){

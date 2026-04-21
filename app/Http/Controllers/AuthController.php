@@ -10,11 +10,12 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
     public function login(){
-        return view('login.login');
+        return view('auth.login');
     }
 
     public function loginsave(Request $request){
@@ -36,7 +37,7 @@ class AuthController extends Controller
     }
 
     public function signup(){
-        return view('login.signup');
+        return view('auth.signup');
     }
 
     public function signsave(Request $request){
@@ -80,7 +81,7 @@ class AuthController extends Controller
     }
 
     public function forgotPassword(){
-        return view('login.forgot');
+        return view('auth.forgot');
     }
 
     public function sendmail(Request $request){
@@ -98,57 +99,69 @@ class AuthController extends Controller
             $status = Password::sendResetLink($request->only('email'));
             // return $status;
             if ($status === Password::RESET_LINK_SENT) {
-				return "true";
-                // return redirect('forget/password')->with('success', 'Password reset email sent successfully. Please check your email.');
-            } else {
-				return "false";
-                // return redirect('forget/password')->with('fail', 'Something went wrong!!. Please try after some time.');
+				return response()->json([
+                    'success' => true,
+                    'message' => 'If this email exists, a reset link has been sent.'
+                ]);
             } 
         } else {
-            return "no user";
-            // return redirect('forget/password')->with('fail', "No User Found With $email");
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found.'
+            ]);
         }
       
     }
 
 
     public function showResetForm(Request $request, $token){
-        return view('login.passwordreset')->with(
+        return view('auth.passwordreset')->with(
                 ['token' => $token, 'email' => $request->email]
             );
     }
 
-    public function resetPassword(Request $request){
-         $validator = Validator::make($request->all(), [
+
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
             'email' => 'required|email',
             'password' => [
                 'required',
                 'min:6',
-                'regex:/^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-zA-Z]).+$/',
+                'regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).+$/',
             ],
-            'c_password' => 'required|same:password',
-        ], [ 
-            'password.regex' => 'The password must be alphanumeric with at least one uppercase letter and one number.',
-            'c_password.required' => 'Confirm Password is required.',
-            'c_password.same' => 'The password confirmation does not match the password.'
+            'password_confirmation' => 'required|same:password'
+        ], [
+            'password_confirmation.regex' => 'Password must contain at least one uppercase letter, one lowercase letter, and one number.',
+            'password_confirmation.required' => 'Confirm Password is required.',
+            'password_confirmation.same' => 'Password confirmation does not match.',
         ]);
-    
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->password = Hash::make($password);
+                $user->save();
+            }
+        );
+
+        if ($status === Password::PASSWORD_RESET) {
+            return response()->json(['message' => 'Password reset successful']);
         }
 
-        $user_exists = User::where('email', $request->email)->first();
-
-        if($user_exists){
-            echo "yes its exists";
-        }
-        die();
+        return response()->json(['error' => __($status)], 400);
+    }
 
 
-        
+    public function logout(Request $request){
+        Auth::logout(); 
+        $request->session()->invalidate(); 
+        $request->session()->regenerateToken(); 
+        return redirect()->route('login'); 
     }
 
     public function dashboard(){
-        return view('dashboard');
+        return view('dashboard.dashboard');
     }
 }
