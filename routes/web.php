@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Middleware\Authenticate;
 
 
@@ -24,6 +25,9 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 Route::middleware(Authenticate::class)->group(function(){
-       Route::get('/dashboard',[AuthController::class , 'dashboard'])->name('dashboard');
+       Route::get('/dashboard',[DashboardController::class , 'dashboard'])->name('dashboard');
 });
 
+
+Route::view('/{any}', 'dashboard.dashboard')
+    ->where('any', '^(?!api).*$');
