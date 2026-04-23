@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Middleware\Authenticate;
+use Inertia\Inertia;
 
 
 Route::get('/', function () {
@@ -24,10 +25,14 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('/logout','logout')->name('logout'); 
 });
 
-Route::middleware(Authenticate::class)->group(function(){
-       Route::get('/dashboard',[DashboardController::class , 'dashboard'])->name('dashboard');
-});
+// Route::middleware(Authenticate::class)->group(function(){
+//        Route::get('/dashboard',[DashboardController::class , 'dashboard'])->name('dashboard');
+// });
 
+
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware('auth')->name('dashboard');;
 
 Route::view('/{any}', 'dashboard.dashboard')
     ->where('any', '^(?!api).*$');
