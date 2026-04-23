@@ -32,7 +32,24 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
-})->middleware('auth')->name('dashboard');;
+})->middleware('auth')->name('dashboard');
+
+Route::get('/clients', function () {
+    return Inertia::render('Clients');
+})->middleware('auth');
+
+Route::get('/jobs', function () {
+    return Inertia::render('Jobs');
+})->middleware('auth');
+
+Route::get('/profile', function () {
+    return Inertia::render('Profile');
+})->middleware('auth');
+
+
+Route::get('/clients', [AuthController::class, 'get_client'])->middleware('auth')->name('clients');
+
+
 
 Route::view('/{any}', 'dashboard.dashboard')
     ->where('any', '^(?!api).*$');

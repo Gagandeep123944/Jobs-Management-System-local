@@ -7,10 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Clients;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
+use Inertia\Inertia;
 
 class AuthController extends Controller
 {
@@ -163,5 +165,14 @@ class AuthController extends Controller
 
     public function dashboard(){
         return view('dashboard.dashboard');
+    }
+
+    public function get_client(){
+
+       $clients = \App\Models\Clients::paginate(10);
+
+       return Inertia::render('Clients',[
+        'clients' => $clients
+       ]);
     }
 }
