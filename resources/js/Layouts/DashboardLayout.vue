@@ -3,14 +3,32 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-      <h3 class="logo">POWER AI</h3>
+      <h3 class="logo">JM System</h3>
 
       <ul>
-        <li class="active"><Link href="/dashboard">Dashboard</Link></li>
-        <li><Link href="/clients">clients</Link></li>
-        <li><Link href="/jobs">Jobs</Link></li>
-        <li><Link href="/create_client">Create Client</Link></li>
-        <li><Link href="/profile">Profile</Link></li>
+        <li :class="{ active: $page.url === '/dashboard' }">
+          <Link href="/dashboard">Dashboard</Link>
+        </li>
+
+        <li :class="{ active: $page.url.startsWith('/clients') }">
+          <Link href="/clients">clients</Link>
+        </li>
+
+        <li :class="{ active: $page.url.startsWith('/jobs') }">
+          <Link href="/jobs">Jobs</Link>
+        </li>
+
+        <li :class="{ active: $page.url === '/create_client' }">
+          <Link href="/create_client">Create Client</Link>
+        </li>
+
+        <li :class="{ active: $page.url === '/profile' }">
+          <Link href="/profile">Profile</Link>
+        </li>
+
+        <li :class="{ active: $page.url.startsWith('/technician') }">
+          <Link href="/technician">Techs</Link>
+        </li>
       </ul>
     </div>
 
@@ -23,7 +41,7 @@
         <button>SEARCH</button>
 
         <div class="user">
-          <span>Sign Out</span>
+          <a href="/logout" style="text-decoration:auto; color:black;"><span>Sign Out</span></a> 
         </div>
       </div>
 

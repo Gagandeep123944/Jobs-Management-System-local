@@ -167,12 +167,24 @@ class AuthController extends Controller
         return view('dashboard.dashboard');
     }
 
-    public function get_client(){
+    public function get_client(Request $request)
+    {
+        $query = \App\Models\Clients::query();
 
-       $clients = \App\Models\Clients::paginate(10);
+        if ($request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                ->orWhere('mobile_no', 'like', '%' . $request->search . '%');
+            });
+        }
 
-       return Inertia::render('Clients',[
-        'clients' => $clients
-       ]);
+        $clients = $query->paginate(10)->withQueryString();
+
+        return Inertia::render('Clients', [
+            'clients' => $clients,
+            'filters' => $request->only('search')
+        ]);
     }
+
+
 }

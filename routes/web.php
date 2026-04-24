@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ClientImportController;
 use App\Http\Middleware\Authenticate;
 use Inertia\Inertia;
 
@@ -25,30 +26,17 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('/logout','logout')->name('logout'); 
 });
 
-// Route::middleware(Authenticate::class)->group(function(){
-//        Route::get('/dashboard',[DashboardController::class , 'dashboard'])->name('dashboard');
-// });
+
+Route::middleware('auth')->controller(DashboardController::class)->group(function () {
+    Route::get('/dashboard', 'dashboard')->name('dashboard');
+    Route::get('/clients', 'clients')->name('clients');
+    Route::get('/jobs', 'jobs')->name('jobs');
+    Route::get('/profile', 'profile')->name('profile');
+    Route::get('/technician', 'technician')->name('technician');
+});
 
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware('auth')->name('dashboard');
-
-Route::get('/clients', function () {
-    return Inertia::render('Clients');
-})->middleware('auth');
-
-Route::get('/jobs', function () {
-    return Inertia::render('Jobs');
-})->middleware('auth');
-
-Route::get('/profile', function () {
-    return Inertia::render('Profile');
-})->middleware('auth');
-
-
-Route::get('/clients', [AuthController::class, 'get_client'])->middleware('auth')->name('clients');
-
+Route::post('/clients/import', [ClientImportController::class, 'import'])->name('import');
 
 
 Route::view('/{any}', 'dashboard.dashboard')
